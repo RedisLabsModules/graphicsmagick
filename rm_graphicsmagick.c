@@ -285,6 +285,69 @@ err:
   return REDISMODULE_ERR;
 }
 
+int GMGetTypeCommand(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) {
+  int res = REDISMODULE_ERR;
+
+  if (argc != 2) {
+    return RedisModule_WrongArity(ctx);
+  }
+
+  // init auto memory for created strings
+  RedisModule_AutoMemory(ctx);
+
+  RedisModuleKey *key;
+  Image *img = NULL;
+  ImageInfo *ii = NULL;
+  ExceptionInfo gm_exception;
+
+  // open the key
+  key = RedisModule_OpenKey(ctx, argv[1], REDISMODULE_READ);
+
+  // If key doesn't exist then return immediately
+  if (RedisModule_KeyType(key) == REDISMODULE_KEYTYPE_EMPTY) {
+    RedisModule_ReplyWithError(ctx, "empty key");
+    return REDISMODULE_OK;
+  }
+
+  // Validate key is a string
+  if (RedisModule_KeyType(key) != REDISMODULE_KEYTYPE_STRING) {
+    RedisModule_ReplyWithError(ctx, REDISMODULE_ERRORMSG_WRONGTYPE);
+    return REDISMODULE_ERR;
+  }
+
+  // Generic GM setup
+  ii = CloneImageInfo(NULL);
+  GetExceptionInfo(&gm_exception);
+
+  // Get access to the image
+  size_t key_len;
+  char *buf = RedisModule_StringDMA(key, &key_len, REDISMODULE_READ);
+  if (!buf) {
+    RedisModule_ReplyWithError(ctx, REDISMODULE_ERRORMSG_WRONGTYPE);
+    goto err;
+  }
+
+  // Read the source image
+  img = PingBlob(ii, buf, key_len, &gm_exception);
+  if (!img) {
+    GMExceptionReply(ctx, &gm_exception, "unknown image format");
+    goto err;
+  }
+
+  RedisModule_ReplyWithSimpleString(ctx, img->magick);
+
+  res = REDISMODULE_OK;
+
+err:
+  if (ii)
+    DestroyImageInfo(ii);
+  if (img)
+    DestroyImage(img);
+  DestroyExceptionInfo(&gm_exception);
+
+  return res;
+}
+
 int RedisModule_OnLoad(RedisModuleCtx *ctx) {
 
   // Register the module itself
@@ -306,6 +369,10 @@ int RedisModule_OnLoad(RedisModuleCtx *ctx) {
   }
 
   if (RedisModule_CreateCommand(ctx, "GRAPHICSMAGICK.THUMBNAIL", GMThumbnailCommand, "write", 1, 1, 1) == REDISMODULE_ERR) {
+    return REDISMODULE_ERR;
+  }
+
+  if (RedisModule_CreateCommand(ctx, "GRAPHICSMAGICK.TYPE", GMGetTypeCommand, "readonly", 1, 1, 1) == REDISMODULE_ERR) {
     return REDISMODULE_ERR;
   }
 
