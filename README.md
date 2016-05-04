@@ -6,7 +6,7 @@ Currently very limited functionality is supported more as a POC than anything pr
 
 ### Prerequisites
 
-* {libGraphicsMagic.so} and header should be installed (ubuntu: apt-get install libgraphicsmagick1-dev), tested with version 1.3.23
+* libGraphicsMagic.so and header should be installed (ubuntu: apt-get install libgraphicsmagick1-dev), tested with version 1.3.23
 
 ### Bulding the module
 
