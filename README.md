@@ -22,11 +22,11 @@ All commands manipulate a string key containing an image in a format GraphicsMag
 
 ### Added commands
 
-* GRAPHICSMAGICK.ROTATE <KEY> <float angle in degrees> - rotate image
-* GRAPHICSMAGICK.SWIRL <KEY> <float angle in degrees> - swirl image
-* GRAPHICSMAGICK.BLUR <KEY> <float Gaussian radius in pixels> <float std deviation of the Gaussian> - blur image
-* GRAPHICSMAGICK.THUMBNAIL <KEY> <int width of scaled image> <int height of scaled image> - scale image
-* GRAPHICSMAGICK.TYPE <KEY> - return image format
+* `GRAPHICSMAGICK.ROTATE <KEY> <float angle in degrees>` - rotate image
+* `GRAPHICSMAGICK.SWIRL <KEY> <float angle in degrees>` - swirl image
+* `GRAPHICSMAGICK.BLUR <KEY> <float Gaussian radius in pixels> <float std deviation of the Gaussian>` - blur image
+* `GRAPHICSMAGICK.THUMBNAIL <KEY> <int width of scaled image> <int height of scaled image>` - scale image
+* `GRAPHICSMAGICK.TYPE <KEY>` - return image format
 
 ### Python example
 ```python
