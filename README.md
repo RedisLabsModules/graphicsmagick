@@ -45,8 +45,10 @@ See here for details of GraphicsMagick core API: http://www.graphicsmagick.org/a
 Look at the implementation of the actually commads `GMXXXCommand()` functions and add new ones accordingly.
 
 There are a million good ideas about what more can be done with this module, here are some:
+
 * STORE stye commands so key isn't modified.
 * Format conversion commands.
 * Multi key commands for composing multiple images into new images.
 * Profiling performance and finding optimal formats for doing the manipulation including working with RAW formats and perhaps doing the transformantion in place without copying the data.
 * ...
+
