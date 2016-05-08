@@ -1,6 +1,7 @@
-# Redis Module wrapping libGraphicsMagick
+# rm_graphicsmagick: Redis Module wrapping libGraphicsMagick
 
-Currently very limited functionality is supported more as a POC than anything practical.
+Provides (some of) the functionality of the [GraphicsMagick](http://www.graphicsmagick.org) image processing system inside of redis.
+Currently very limited functionality is supported more as a POC than anything practical, but it can fairly easily be extended to do whatever "magick" you want.
 
 ## Building it
 
@@ -16,17 +17,38 @@ Currently very limited functionality is supported more as a POC than anything pr
 
 * Run `redis-server --loadmodule <path-to-module>/rm_graphicsmagick.so`
 
-## Using it
+## Image manipulation API
 
-All commands manipulate a string key containing an image in a format GraphicsMagick can handle (See: http://www.graphicsmagick.org/formats.html).
+All commands access a string key containing an image in a format GraphicsMagick can handle (See: http://www.graphicsmagick.org/formats.html).
 
-### Added commands
+### `GRAPHICSMAGICK.ROTATE key angle`
+Rotate image stored in `key` and updates `key` with the result. `angle` is a float value in degrees for rotation.
 
-* `GRAPHICSMAGICK.ROTATE <KEY> <float angle in degrees>` - rotate image
-* `GRAPHICSMAGICK.SWIRL <KEY> <float angle in degrees>` - swirl image
-* `GRAPHICSMAGICK.BLUR <KEY> <float Gaussian radius in pixels> <float std deviation of the Gaussian>` - blur image
-* `GRAPHICSMAGICK.THUMBNAIL <KEY> <int width of scaled image> <int height of scaled image>` - scale image
-* `GRAPHICSMAGICK.TYPE <KEY>` - return image format
+**Reply:** String, "OK" on success. Error on error.
+
+### `GRAPHICSMAGICK.SWIRL key angle`
+
+Swirl image stored in `key` and updates `key` with the result. `angle` is a float value in degrees for swirling.
+
+**Reply:** String, "OK" on success. Error on error.
+
+### `GRAPHICSMAGICK.BLUR key radius std_dev
+
+Blur image stored in `key` and update `key` with the result. `radius` is the Gaussian radius in pixels, `std_dev` is the standard deviation of the Gaussian.
+
+**Reply:** String, "OK" on success. Error on error.
+
+### `GRAPHICSMAGICK.THUMBNAIL key width height`
+
+Scale image stored in `key` to given `width` and `height` and updates `key` with the result.
+
+**Reply:** String, "OK" on success. Error on error.
+
+### `GRAPHICSMAGICK.TYPE key`
+
+ Return the format of the image stored in `key` ("PNG", "GIF", etc.). Returns an error if no valid image is stored in `key`.
+
+**Reply:** String or error.
 
 ### Python example
 ```python
@@ -52,3 +74,6 @@ There are a million good ideas about what more can be done with this module, her
 * Profiling performance and finding optimal formats for doing the manipulation including working with RAW formats and perhaps doing the transformantion in place without copying the data.
 * ...
 
+## License
+
+see [LICENSE](LICENSE)
