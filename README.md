@@ -32,7 +32,7 @@ Swirl image stored in `key` and updates `key` with the result. `angle` is a floa
 
 **Reply:** String, "OK" on success. Error on error.
 
-### `GRAPHICSMAGICK.BLUR key radius std_dev
+### `GRAPHICSMAGICK.BLUR key radius std_dev`
 
 Blur image stored in `key` and update `key` with the result. `radius` is the Gaussian radius in pixels, `std_dev` is the standard deviation of the Gaussian.
 
